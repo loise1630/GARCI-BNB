@@ -1,8 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="intro-active">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    window.scrollTo(0, 0);
+  </script>
   <meta name="theme-color" content="#202725">
   <meta name="description" content="A relaxed city stay at Grace Residences, Taguig. Discover Garci's Staycation and ask about availability.">
   <meta property="og:title" content="Garci's Staycation | Grace Residences, Taguig">
@@ -15,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="intro-active">
   <div class="photo-intro" aria-hidden="true"><img src="garci.png" alt=""></div>
   <div class="page-progress" aria-hidden="true"><i></i></div>
   <main>
@@ -223,6 +228,20 @@
     const nextButton = document.querySelector('.journey-next');
     const photoSection = document.querySelector('.photo-reveal');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const photoIntro = document.querySelector('.photo-intro');
+    function finishPhotoIntro() {
+      document.documentElement.classList.remove('intro-active');
+      document.body.classList.remove('intro-active');
+      window.scrollTo(0, 0);
+    }
+    if (reduceMotion || !photoIntro) {
+      finishPhotoIntro();
+    } else {
+      photoIntro.addEventListener('animationend', event => {
+        if (event.target === photoIntro) finishPhotoIntro();
+      }, { once: true });
+      window.setTimeout(finishPhotoIntro, 3000);
+    }
     let frame = 0;
     let lastActive = -1;
 
